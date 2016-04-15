@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.iot</groupId>
+    <artifactId>app</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>IOT App</name>
+   
+    <dependencies>
+    	<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>6.0.45</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mraa</groupId>
+			<artifactId>mraa</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+    </dependencies>
+    
+    <build>
+    	<sourceDirectory>src</sourceDirectory>
+        <finalName>app</finalName>
+        <plugins>
+	    	<plugin>            
+		  		<groupId>org.apache.maven.plugins</groupId>
+		  		<artifactId>maven-war-plugin</artifactId>
+		  		<configuration>
+					<webXml>WEB-INF/web.xml</webXml>
+		  		</configuration>
+			</plugin>
+    	</plugins>
+    </build>
+</project>
