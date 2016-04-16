@@ -18,3 +18,7 @@ hs_err_pid*
 
 # Eclipse
 .settings
+
+# OS X Unwanted files
+.DS_Store
+

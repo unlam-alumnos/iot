@@ -18,10 +18,10 @@ public class Demo extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<title>Hello Galileo!</title>");
+		out.println("<title>Hello Galileo Demo!</title>");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1>Hello Galileo!</h1>");
+		out.println("<h1>Hello Galileo Demo!</h1>");
 		out.println("<br/>");
 		out.println("<br/>");
 		out.println("<p>Starting... :)</p>");
