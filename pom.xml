@@ -9,20 +9,34 @@
     <version>1.0-SNAPSHOT</version>
     <name>IOT App</name>
 
+    <properties>
+        <mraa.version>1.8.0</mraa.version>
+        <reasteasy.version>3.0.4.Final</reasteasy.version>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>6.0.45</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- MRAA Interface for GPIO access -->
         <dependency>
             <groupId>com.mraa</groupId>
             <artifactId>mraa</artifactId>
-            <version>1.8.0</version>
+            <version>${mraa.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- RestEasy for REST services -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>${reasteasy.version}</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>JBoss repository</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+        </repository>
+    </repositories>
 
     <build>
         <sourceDirectory>src</sourceDirectory>
