@@ -15,6 +15,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>6.0.45</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- MRAA Interface for GPIO access -->
         <dependency>
             <groupId>com.mraa</groupId>
@@ -27,6 +33,11 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
+            <version>${reasteasy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
             <version>${reasteasy.version}</version>
         </dependency>
     </dependencies>
