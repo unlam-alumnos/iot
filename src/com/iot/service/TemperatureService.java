@@ -19,7 +19,7 @@ import mraa.Aio;
 
 @Path("/temperature")
 public class TemperatureService {
-    private static final String FILE_NAME = "alarm.conf";
+    public static final String FILE_NAME = "alarm.conf";
 
     @GET
     @Path("/read")
@@ -33,10 +33,8 @@ public class TemperatureService {
     @Path("/limits")
     @Produces("application/json")
     public TemperatureLimits getLimits() throws IOException {
-        TemperatureLimits limits;
-
         ObjectMapper mapper = new ObjectMapper();
-        limits = mapper.readValue(new File(FILE_NAME), TemperatureLimits.class);
+        TemperatureLimits limits = mapper.readValue(new File(FILE_NAME), TemperatureLimits.class);
 
         return limits;
     }
