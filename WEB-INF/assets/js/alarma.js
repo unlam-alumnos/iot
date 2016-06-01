@@ -9,6 +9,15 @@ var URL_WS_TEMP_READ = "http://192.168.1.72:8080/app/rest/temperature/read";
 var URL_WS_TEMP_LIMITS = "http://192.168.1.72:8080/app/rest/temperature/limits";
 var URL_WS_TEMP_SET_LIMITS = "http://192.168.1.72:8080/app/rest/temperature/setlimits";
 
+function switchOnOff(){
+    var status = $("#switch_on_off").is();
+    if(status) {
+        powerOnAlarm();
+    } else {
+        powerOffAlarm();
+    }
+}
+
 function getAlarmStatusFromWS() {
     $.get(URL_WS_ALARM_STATUS, function(data, status){
         alert("Data: " + data + "\nStatus: " + status);
