@@ -80,7 +80,7 @@
                                 <p class="lead">Alarma {ENCENDIDA_APAGADA}</p>
                             </div>
                             <div class="col-md-6 text-left">
-                                <input id="switch_on_off" name="switch_on_off" type="checkbox" class="js-switch" checked onchange="switchOnOff()"/>
+                                <input id="switch_on_off" name="switch_on_off" type="checkbox" class="js-switch" onchange="switchOnOff()"/>
                             </div>
                         </div>
                         <!--
@@ -170,22 +170,13 @@
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
 <!-- Custom and plugin javascript -->
 <script src="assets/js/inspinia.js"></script>
 <script src="assets/js/plugins/pace/pace.min.js"></script>
-
 <!-- Interaccion con sistema de Alarma -->
 <script src="assets/js/alarma.js"></script>
-
 <!-- Switchery -->
 <script src="assets/js/plugins/switchery/switchery.js"></script>
-
-<script>
-    var elem = document.querySelector('.js-switch');
-    var switchery = new Switchery(elem, { color: '#1AB394' });
-</script>
-
 </body>
 
 </html>
