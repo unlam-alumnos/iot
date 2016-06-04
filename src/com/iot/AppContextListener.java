@@ -18,6 +18,7 @@ import com.iot.util.SensorUtils;
 import mraa.Aio;
 import mraa.Dir;
 import mraa.Gpio;
+import mraa.Pwm;
 
 public class AppContextListener implements ServletContextListener {
     private Timer alarmTimer;
@@ -29,22 +30,32 @@ public class AppContextListener implements ServletContextListener {
     private Gpio red;
     private Gpio blue;
     private Gpio green;
+    private Pwm led;
 
     private static volatile boolean canRing = false;
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("AppContextListener initialized.");
 
+        // Temperature sensor
         sensor = new Aio(5);
+
+        // Buzzer
         buzzer = new Gpio(7);
+        buzzer.dir(Dir.DIR_OUT);
+
+        // RGB LED
         red = new Gpio(9);
         green = new Gpio(11);
         blue = new Gpio(10);
-
         red.dir(Dir.DIR_OUT);
         green.dir(Dir.DIR_OUT);
         blue.dir(Dir.DIR_OUT);
-        buzzer.dir(Dir.DIR_OUT);
+
+        // LED
+        led = new Pwm(6);
+        led.period_ms(1);
+        led.enable(true);
 
         red.write(0);
         green.write(0);
@@ -99,28 +110,33 @@ public class AppContextListener implements ServletContextListener {
                     TemperatureLimits.class);
 
             if (temp < limits.getMin()) {
-                red.write(250);
-                green.write(230);
-                blue.write(0);
+                red.write(0);
+                green.write(0);
+                blue.write(1);
+                led.pulsewidth_us(10);
                 canRing = true;
                 System.out.println(temp + " - LOW -");
             } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
                 red.write(0);
-                green.write(250);
+                green.write(1);
                 blue.write(0);
+                led.pulsewidth_us(80);
                 canRing = false;
                 System.out.println(temp + " - MID -");
             } else {
-                red.write(250);
+                red.write(1);
                 green.write(0);
                 blue.write(0);
+                led.pulsewidth_us(250);
                 canRing = true;
                 System.out.println(temp + " - HIGH -");
             }
+
         } else {
             red.write(0);
             green.write(0);
             blue.write(0);
+            led.pulsewidth_us(0);
             canRing = false;
         }
     }
