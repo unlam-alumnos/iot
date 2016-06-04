@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     setInterval( function() {
         if(status){
+            getConfigValuesFromWS();
             getTemperatureValueFromWS();
         }
     }, 1500);
@@ -37,31 +38,34 @@ function switchOnOff(){
 
 function getAlarmStatusFromWS() {
     $.get(URL_WS_ALARM_STATUS, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
     });
 }
 
 function powerOnAlarm() {
     $.get(URL_WS_ALARM_ON, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
     });
 }
 
 function powerOffAlarm() {
     $.get(URL_WS_ALARM_OFF, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
     });
 }
 
 function getTemperatureValueFromWS() {
     $.get(URL_WS_TEMP_READ, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
+        $("#temperature").text(data);
     });
 }
 
 function getConfigValuesFromWS() {
     $.get(URL_WS_TEMP_LIMITS, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
+        $("#min-temp").text(data.min);
+        $("#max-temp").text(data.max);
     });
 }
 
@@ -70,6 +74,6 @@ function setConfigValuesInWS() {
     var max = $("#rangeMax").val();
     var URL = URL_WS_TEMP_SET_LIMITS + "?min=" + min + "&max=" + max;
     $.get(URL, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+        // alert("Data: " + data + "\nStatus: " + status);
     });
 }
