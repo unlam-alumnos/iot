@@ -1,7 +1,6 @@
 package com.iot;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +20,8 @@ import mraa.Dir;
 import mraa.Gpio;
 
 public class AppContextListener implements ServletContextListener {
-    private Timer timer;
+    private Timer alarmTimer;
+    private Timer buzzerTimer;
 
     private Aio sensor;
 
@@ -29,6 +29,8 @@ public class AppContextListener implements ServletContextListener {
     private Gpio red;
     private Gpio blue;
     private Gpio green;
+
+    private static volatile boolean canRing = false;
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("AppContextListener initialized.");
@@ -48,8 +50,8 @@ public class AppContextListener implements ServletContextListener {
         green.write(0);
         blue.write(0);
 
-        this.timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
+        this.alarmTimer = new Timer();
+        TimerTask alarmTask = new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -60,16 +62,33 @@ public class AppContextListener implements ServletContextListener {
 
             }
         };
-        this.timer.schedule(timerTask, 500, 500);
+        this.alarmTimer.schedule(alarmTask, 500, 500);
+
+        this.buzzerTimer = new Timer();
+        TimerTask buzzerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    if (canRing) {
+                        freak();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        this.buzzerTimer.schedule(buzzerTask, 500, 4000);
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         System.out.println("AppContextListener destroyed.");
 
-        this.timer.cancel();
+        this.alarmTimer.cancel();
+        this.buzzerTimer.cancel();
     }
 
-    public void execute() throws IOException {
+    public void execute() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AlarmStatus alarmStatus = mapper.readValue(new File(AlarmService.FILE_NAME), AlarmStatus.class);
 
@@ -83,25 +102,52 @@ public class AppContextListener implements ServletContextListener {
                 red.write(0);
                 green.write(250);
                 blue.write(0);
-                buzzer.write(0);
+                canRing = false;
                 System.out.println(temp + " - LOW -");
             } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
                 red.write(250);
                 green.write(230);
                 blue.write(0);
-                buzzer.write(1);
+                canRing = true;
                 System.out.println(temp + " - MID -");
             } else {
                 red.write(250);
                 green.write(0);
                 blue.write(0);
-                buzzer.write(1);
+                canRing = true;
                 System.out.println(temp + " - HIGH -");
             }
         } else {
             red.write(0);
             green.write(0);
             blue.write(0);
+            canRing = false;
         }
     }
+
+    private void freak() throws InterruptedException {
+        ring();
+        Thread.sleep(500);
+        ring();
+        Thread.sleep(2000);
+    }
+
+    private void ring() throws InterruptedException {
+        buzzer.write(1);
+        Thread.sleep(50);
+        buzzer.write(0);
+        Thread.sleep(50);
+
+        buzzer.write(1);
+        Thread.sleep(50);
+        buzzer.write(0);
+        Thread.sleep(50);
+
+        buzzer.write(1);
+        Thread.sleep(50);
+        buzzer.write(0);
+        Thread.sleep(50);
+    }
+
+
 }
