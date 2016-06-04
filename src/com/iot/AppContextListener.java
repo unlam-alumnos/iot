@@ -17,28 +17,43 @@ import com.iot.service.TemperatureService;
 import com.iot.util.SensorUtils;
 
 import mraa.Aio;
+import mraa.Dir;
 import mraa.Gpio;
 
 public class AppContextListener implements ServletContextListener {
     private Timer timer;
+
     private Aio sensor;
+
+    private Gpio buzzer;
+    private Gpio red;
+    private Gpio blue;
+    private Gpio green;
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("AppContextListener initialized.");
 
         sensor = new Aio(5);
+        buzzer = new Gpio(7);
+        red = new Gpio(9);
+        green = new Gpio(11);
+        blue = new Gpio(10);
+
+        red.dir(Dir.DIR_OUT);
+        green.dir(Dir.DIR_OUT);
+        blue.dir(Dir.DIR_OUT);
+        buzzer.dir(Dir.DIR_OUT);
+
+        red.write(0);
+        green.write(0);
+        blue.write(0);
 
         this.timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    AlarmStatus alarmStatus = mapper.readValue(new File(AlarmService.FILE_NAME),
-                            AlarmStatus.class);
-                    if (alarmStatus != null && alarmStatus.isOn()) {
-                        execute();
-                    }
+                    execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -55,35 +70,38 @@ public class AppContextListener implements ServletContextListener {
     }
 
     public void execute() throws IOException {
-        double temp = SensorUtils.convertToCelsius(sensor.read());
-
         ObjectMapper mapper = new ObjectMapper();
-        TemperatureLimits limits = mapper.readValue(new File(TemperatureService.FILE_NAME),
-                TemperatureLimits.class);
+        AlarmStatus alarmStatus = mapper.readValue(new File(AlarmService.FILE_NAME), AlarmStatus.class);
 
-        Gpio red = new Gpio(11);
-        Gpio green = new Gpio(10);
-        Gpio blue = new Gpio(9);
+        if (alarmStatus != null && alarmStatus.isOn()) {
+            double temp = SensorUtils.convertToCelsius(sensor.read());
 
-        red.write(0);
-        green.write(0);
-        blue.write(0);
+            TemperatureLimits limits = mapper.readValue(new File(TemperatureService.FILE_NAME),
+                    TemperatureLimits.class);
 
-        if (temp < limits.getMin()) {
-            red.write(0);
-            green.write(0);
-            blue.write(200);
-            System.out.println(temp + " - LOW");
-        } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
-            red.write(0);
-            green.write(200);
-            blue.write(0);
-            System.out.println(temp + " - MID");
+            if (temp < limits.getMin()) {
+                red.write(0);
+                green.write(250);
+                blue.write(0);
+                buzzer.write(0);
+                System.out.println(temp + " - LOW -");
+            } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
+                red.write(250);
+                green.write(230);
+                blue.write(0);
+                buzzer.write(1);
+                System.out.println(temp + " - MID -");
+            } else {
+                red.write(250);
+                green.write(0);
+                blue.write(0);
+                buzzer.write(1);
+                System.out.println(temp + " - HIGH -");
+            }
         } else {
-            red.write(200);
+            red.write(0);
             green.write(0);
             blue.write(0);
-            System.out.println(temp + " - HIGH");
         }
     }
 }
