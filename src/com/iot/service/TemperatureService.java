@@ -19,7 +19,7 @@ import mraa.Aio;
 
 @Path("/temperature")
 public class TemperatureService {
-    public static final String FILE_NAME = "alarm.conf";
+    public static final String FILE_NAME = "/home/root/alarm.conf";
 
     @GET
     @Path("/read")

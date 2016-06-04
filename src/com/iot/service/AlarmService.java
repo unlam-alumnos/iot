@@ -15,7 +15,7 @@ import com.iot.dto.AlarmStatus;
 
 @Path("/alarm")
 public class AlarmService {
-    public static final String FILE_NAME = "alarm.status";
+    public static final String FILE_NAME = "/home/root/alarm.status";
 
     @GET
     @Path("/status")
