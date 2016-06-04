@@ -99,16 +99,16 @@ public class AppContextListener implements ServletContextListener {
                     TemperatureLimits.class);
 
             if (temp < limits.getMin()) {
-                red.write(0);
-                green.write(250);
-                blue.write(0);
-                canRing = false;
-                System.out.println(temp + " - LOW -");
-            } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
                 red.write(250);
                 green.write(230);
                 blue.write(0);
                 canRing = true;
+                System.out.println(temp + " - LOW -");
+            } else if (temp >= limits.getMin() && temp <= limits.getMax()) {
+                red.write(0);
+                green.write(250);
+                blue.write(0);
+                canRing = false;
                 System.out.println(temp + " - MID -");
             } else {
                 red.write(250);
